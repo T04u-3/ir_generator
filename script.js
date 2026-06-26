@@ -125,19 +125,62 @@ prepareAnalysis();
 
 function prepareAnalysis(){
 
-const original =
-originalBuffer.getChannelData(0);
+    status.textContent="解析中...";
 
-const recorded =
-recordedBuffer.getChannelData(0);
-const processed =
-preprocessAudio(
-    original,
-    recorded
-);
+    const original =
+    originalBuffer.getChannelData(0);
 
-console.log(original.length);
-console.log(recorded.length);
+    const recorded =
+    recordedBuffer.getChannelData(0);
+
+    // 前処理
+    const processed =
+    preprocessAudio(
+        original,
+        recorded
+    );
+
+    const aligned =
+    matchLength(
+        original,
+        processed
+    );
+
+    drawWaveform(
+        aligned.original,
+        "waveCanvas"
+    );
+
+    drawWaveform(
+        aligned.recorded,
+        "irCanvas"
+    );
+
+    //---------------------------------
+    // RT60解析
+    //---------------------------------
+
+    const analysis =
+    analyzeImpulse(
+        aligned.recorded,
+        audioContext.sampleRate
+    );
+
+    document.getElementById("rt60").textContent =
+    analysis.rt60.toFixed(2)+" s";
+
+    document.getElementById("early").textContent =
+    analysis.earlyReflection+" ms";
+
+    document.getElementById("tail").textContent =
+    analysis.tail.toFixed(2)+" s";
+
+    document.getElementById("stereo").textContent =
+    analysis.stereo+" %";
+
+    status.textContent="解析完了";
+
+}
 
 // graph.jsへ送る
 
