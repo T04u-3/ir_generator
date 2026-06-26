@@ -160,3 +160,136 @@ function preprocessAudio(original,recorded){
     return aligned;
 
 }
+
+//--------------------------------------
+// IR解析
+//--------------------------------------
+
+function analyzeImpulse(samples,sampleRate){
+
+    const peak=
+    findPeak(samples);
+
+    const rt60=
+    estimateRT60(
+        samples,
+        peak,
+        sampleRate
+    );
+
+    const early=
+    estimateEarlyReflection(
+        samples,
+        peak,
+        sampleRate
+    );
+
+    const tail=
+    estimateTail(
+        samples,
+        peak,
+        sampleRate
+    );
+
+    return{
+
+        rt60:rt60,
+
+        earlyReflection:early,
+
+        tail:tail,
+
+        stereo:100
+
+    };
+
+}
+
+function findPeak(samples){
+
+    let max=0;
+    let index=0;
+
+    for(let i=0;i<samples.length;i++){
+
+        const v=Math.abs(samples[i]);
+
+        if(v>max){
+
+            max=v;
+            index=i;
+
+        }
+
+    }
+
+    return index;
+
+}
+
+function estimateRT60(samples,peak,sampleRate){
+
+    const start=
+    Math.abs(samples[peak]);
+
+    const target=
+    start*0.001;
+
+    for(let i=peak;i<samples.length;i++){
+
+        if(
+            Math.abs(samples[i])<
+            target
+        ){
+
+            return(
+                i-peak
+            )/sampleRate;
+
+        }
+
+    }
+
+    return 0;
+
+}
+
+function estimateEarlyReflection(samples,peak,sampleRate){
+
+    const limit=
+    peak+
+    sampleRate*0.08;
+
+    let best=peak;
+
+    let value=0;
+
+    for(let i=peak+1;i<limit;i++){
+
+        const v=Math.abs(samples[i]);
+
+        if(v>value){
+
+            value=v;
+            best=i;
+
+        }
+
+    }
+
+    return Math.round(
+        (best-peak)
+        /sampleRate
+        *1000
+    );
+
+}
+
+function estimateTail(samples,peak,sampleRate){
+
+    return(
+        samples.length-
+        peak
+    )/sampleRate;
+
+}
