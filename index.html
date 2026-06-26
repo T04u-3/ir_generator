@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>IR Generator</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>IR Generator</h1>
+    <p>サンパレス 音響解析・IR生成ツール</p>
+</header>
+
+<main>
+
+<section class="card">
+
+<h2>① 元音源</h2>
+
+<input
+type="file"
+id="originalFile"
+accept=".wav,.mp3,.ogg,.m4a">
+
+<p class="filename" id="originalName">
+未選択
+</p>
+
+</section>
+
+<section class="card">
+
+<h2>② ホール録音</h2>
+
+<input
+type="file"
+id="recordedFile"
+accept=".wav,.mp3,.ogg,.m4a">
+
+<p class="filename" id="recordedName">
+未選択
+</p>
+
+</section>
+
+<section class="card">
+
+<button id="analyzeButton">
+
+解析開始
+
+</button>
+
+<p id="status">
+
+待機中
+
+</p>
+
+</section>
+
+<section class="card">
+
+<h2>解析結果</h2>
+
+<table>
+
+<tr>
+<td>RT60</td>
+<td id="rt60">-</td>
+</tr>
+
+<tr>
+<td>初期反射</td>
+<td id="early">-</td>
+</tr>
+
+<tr>
+<td>残響時間</td>
+<td id="tail">-</td>
+</tr>
+
+<tr>
+<td>ステレオ幅</td>
+<td id="stereo">-</td>
+</tr>
+
+</table>
+
+</section>
+
+<section class="card">
+
+<h2>波形</h2>
+
+<canvas
+id="waveCanvas"
+width="1100"
+height="250">
+</canvas>
+
+</section>
+
+<section class="card">
+
+<h2>IR波形</h2>
+
+<canvas
+id="irCanvas"
+width="1100"
+height="250">
+</canvas>
+
+</section>
+
+<section class="card">
+
+<button
+id="downloadButton"
+disabled>
+
+hall_ir.wav をダウンロード
+
+</button>
+
+</section>
+
+</main>
+
+<footer>
+
+Version 1.0
+
+</footer>
+
+<script src="fft.js"></script>
+<script src="deconvolution.js"></script>
+<script src="wav.js"></script>
+<script src="graph.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
