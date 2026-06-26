@@ -130,6 +130,11 @@ originalBuffer.getChannelData(0);
 
 const recorded =
 recordedBuffer.getChannelData(0);
+const processed =
+preprocessAudio(
+    original,
+    recorded
+);
 
 console.log(original.length);
 console.log(recorded.length);
@@ -142,7 +147,7 @@ original,
 );
 
 drawWaveform(
-recorded,
+processed,
 "irCanvas"
 );
 
