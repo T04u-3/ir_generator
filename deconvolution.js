@@ -55,39 +55,36 @@ function normalizeLevel(original,recorded){
 
 
 //--------------------------------------
-// 相互相関
+// 高速相互相関
 //--------------------------------------
 
-function crossCorrelation(a,b,maxShift=44100){
+function crossCorrelation(a,b,maxShift=22050){
+
+    const windowSize=32768;
+
+    const aa=a.subarray(0,windowSize);
+    const bb=b.subarray(0,windowSize);
 
     let bestShift=0;
-
     let bestScore=-Infinity;
 
-    for(let shift=-maxShift;
-        shift<=maxShift;
-        shift++){
+    for(let shift=-maxShift;shift<=maxShift;shift+=8){
 
         let score=0;
 
-        for(let i=0;i<a.length;i++){
+        for(let i=0;i<windowSize;i+=4){
 
             const j=i+shift;
 
-            if(
-                j<0||
-                j>=b.length
-            ) continue;
+            if(j<0||j>=windowSize) continue;
 
-            score+=
-            a[i]*b[j];
+            score+=aa[i]*bb[j];
 
         }
 
         if(score>bestScore){
 
             bestScore=score;
-
             bestShift=shift;
 
         }
